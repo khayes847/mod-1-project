@@ -3,6 +3,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+#Don't load data files
+Data/
+
 # C extensions
 *.so
 
