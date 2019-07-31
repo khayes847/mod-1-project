@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[88]:
-
 
 # Import packages
 import pandas as pd
@@ -25,14 +23,13 @@ imbd_principals = pd.read_csv('Data/Zipped_Data/imdb.title.principals.csv.gz',
                               compression='gzip')
 
 
-# In[89]:
-
-
 # Remove punctuation from producton and worldwide.
 # Switch variables from string to float.
-tn_budget['production_budget'] = tn_budget['production_budget'] .apply(lambda x: x.translate
+tn_budget['production_budget'] = tn_budget['production_budget']\
+ .apply(lambda x: x.translate
         (str.maketrans('', '', '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~')))
-tn_budget['worldwide_gross'] = tn_budget['worldwide_gross'] .apply(lambda x: x.translate
+tn_budget['worldwide_gross'] = tn_budget['worldwide_gross']\
+ .apply(lambda x: x.translate
         (str.maketrans('', '', '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~')))
 tn_budget['production_budget'] = pd.to_numeric(tn_budget.production_budget,
                                                downcast='float',
@@ -40,9 +37,6 @@ tn_budget['production_budget'] = pd.to_numeric(tn_budget.production_budget,
 tn_budget['worldwide_gross'] = pd.to_numeric(tn_budget.worldwide_gross,
                                              downcast='float',
                                              errors='coerce')
-
-
-# In[90]:
 
 
 # Create column for net profit (worldwide gross minus production budget).
@@ -58,7 +52,7 @@ tn_budget['ratio'] = list(tn_budget.apply
 # Rename column 'movie' to 'title'
 tn_budget = tn_budget.rename(columns={'movie': 'title'})
 
-# Remove whitespace, potential extra words, punctuation, 
+# Remove whitespace, potential extra words, punctuation,
 # corrupted text, and case from titles
 years = [r'\(2010\)', r"\(2011\)",
          r"\(2012\)", r"\(2013\)", r"\(2014\)",
@@ -66,7 +60,8 @@ years = [r'\(2010\)', r"\(2011\)",
 tn_budget.title = tn_budget.title.replace(years, value='', regex=True)
 tn_budget.title = tn_budget.title.str.strip()
 tn_budget.title = tn_budget.title.apply(lambda x: x.lower())
-tn_budget.title = tn_budget.title .apply(lambda x: x.translate
+tn_budget.title = tn_budget.title\
+ .apply(lambda x: x.translate
         (str.maketrans('', '', '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~')))
 tn_budget.title = tn_budget.title.replace(['the', 'and', 'â',
                                           '\x80\x99'], value='', regex=True)
@@ -76,15 +71,12 @@ tn_budget['year'] = list(tn_budget['release_date'].str[-4:])
 tn_budget = tn_budget.drop(columns=['id', 'domestic_gross', 'release_date'])
 
 
-# In[91]:
-
-
 # Remove 'studio', 'domestic_gross', 'foreign_gross' column.
 # Set 'foreign_gross' to float and 'year' to string
 bom_gross = bom_gross.drop(columns=['domestic_gross', 'foreign_gross'])
 bom_gross['year'] = bom_gross['year'].astype(str)
 
-# Remove whitespace, potential extra words, punctuation, 
+# Remove whitespace, potential extra words, punctuation,
 # corrupted text, and case from titles
 years = [r'\(2010\)', r"\(2011\)",
          r"\(2012\)", r"\(2013\)", r"\(2014\)",
@@ -92,14 +84,11 @@ years = [r'\(2010\)', r"\(2011\)",
 bom_gross.title = bom_gross.title.replace(years, value='', regex=True)
 bom_gross.title = bom_gross.title.str.strip()
 bom_gross.title = bom_gross.title.apply(lambda x: x.lower())
-bom_gross.title = bom_gross.title .apply(lambda x: x.translate
-        (str.maketrans
-         ('', '', '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~')))
+bom_gross.title = bom_gross.title\
+ .apply(lambda x: x.translate
+        (str.maketrans('', '', '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~')))
 bom_gross.title = bom_gross.title.replace(['the', 'and', 'â',
                                           '\x80\x99'], value='', regex=True)
-
-
-# In[92]:
 
 
 # Merge tn_budget and bom_gross
@@ -107,9 +96,6 @@ merged_df = pd.merge(tn_budget, bom_gross, on=["title", "year"], how="left")
 
 # Replace null studio values
 merged_df['studio'] = merged_df.studio.fillna('Unknown')
-
-
-# In[93]:
 
 
 # Create 'year' string column from 'start_year'
@@ -121,7 +107,7 @@ imbd_basics = imbd_basics.drop(columns=['original_title', 'start_year'])
 # Rename column for easier merging
 imbd_basics = imbd_basics.rename(columns={'primary_title': 'title'})
 
-# Remove whitespace, potential extra words, punctuation, 
+# Remove whitespace, potential extra words, punctuation,
 # corrupted text, and case from titles
 years = [r'\(2010\)', r"\(2011\)",
          r"\(2012\)", r"\(2013\)", r"\(2014\)",
@@ -129,16 +115,13 @@ years = [r'\(2010\)', r"\(2011\)",
 imbd_basics.title = imbd_basics.title.replace(years, value='', regex=True)
 imbd_basics.title = imbd_basics.title.str.strip()
 imbd_basics.title = imbd_basics.title.apply(lambda x: x.lower())
-imbd_basics.title = imbd_basics.title .apply(lambda x: x.translate
-        (str.maketrans
-         ('', '', '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~')))
+imbd_basics.title = imbd_basics.title\
+ .apply(lambda x: x.translate
+        (str.maketrans('', '', '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~')))
 imbd_basics.title = imbd_basics.title.replace(['the', 'and', "â",
                                               '\x80\x99'],
                                               value='',
                                               regex=True)
-
-
-# In[94]:
 
 
 # Merge imbd_basics with merged datafile
@@ -149,9 +132,6 @@ merged_df2 = pd.merge(merged_df, imbd_basics, on=["title", "year"], how="left")
 merged_df2['year'] = merged_df2['year'].astype(int)
 merged_df2 = merged_df2.loc[merged_df2.year >= 2010]
 merged_df2['year'] = merged_df2['year'].astype(str)
-
-
-# In[95]:
 
 
 # Merge imbd_principals and imbd_name
@@ -167,14 +147,8 @@ imbd_name_prin = imbd_name_prin.drop(columns=['ordering',
                                               'known_for_titles'])
 
 
-# In[96]:
-
-
 # Create list of directors from imbd_name_prin
 directors = imbd_name_prin.loc[imbd_name_prin.category == 'director']
-
-
-# In[97]:
 
 
 # Merge list of directors with merged document
@@ -189,17 +163,11 @@ merged_df3 = merged_df3.rename(columns={'primary_name': 'director'})
 merged_df3['director'] = merged_df3.director.fillna('Not listed')
 
 
-# In[98]:
-
-
 # Remove duplicate titles
 merged_df_cleaned = merged_df3.loc[~(merged_df3.title.duplicated())]
 
 # Drop extra column
 merged_df_cleaned = merged_df_cleaned.drop(columns='tconst')
-
-
-# In[99]:
 
 
 # Create list of films with top ROI
@@ -232,27 +200,17 @@ directors_roi_count = (merged_df_cleaned.groupby
                        (by='ratio', ascending=False))[0:20].reset_index()
 
 
-# In[102]:
-
-
-top_net.title
-
-
-# In[103]:
-
-
 # Clean titles
 top_net.title = top_net.title.replace(['beauty   beast'],
                                       value='beauty and the beast', regex=True)
 top_net.title = top_net.title.replace(['black panr'],
                                       value='black panther', regex=True)
-top_net.title = top_net.title .replace(['harry potter   deathly hallows part ii'],
+top_net.title = top_net.title\
+ .replace(['harry potter   deathly hallows part ii'],
           value='harry potter deathly hallows part ii', regex=True)
-top_net.title = top_net.title .replace(['star wars ep vii  force awakens'],
+top_net.title = top_net.title\
+ .replace(['star wars ep vii  force awakens'],
           value='star wars ep vii force awakens', regex=True)
-
-
-# In[104]:
 
 
 # Create earnings/cost graph for films with top net
@@ -266,9 +224,6 @@ df = pd.DataFrame({'Production Budget USD (Billion)':
 ax = df.plot.barh(figsize=(20, 15), rot=0, fontsize=20).invert_yaxis()
 
 
-# In[83]:
-
-
 # Create earnings/cost graph for films with top ROI
 index = list(top_ratio['title'])
 production_budget = list(top_ratio['production_budget'])
@@ -279,15 +234,9 @@ df = pd.DataFrame({'Production Budget USD (100 Million)': production_budget,
 ax = df.plot.barh(figsize=(20, 15), rot=0, fontsize=20).invert_yaxis()
 
 
-# In[84]:
-
-
 # Creates a graph of the 20 studios with the best ROI
 studio_ratio_mean.plot(kind='barh',
                        figsize=(15, 10), fontsize=15).invert_yaxis()
-
-
-# In[85]:
 
 
 # Creates a graph of the 2-20 directors with the best ROI
@@ -295,19 +244,11 @@ director_ratio_mean_19.plot(kind='barh',
                             figsize=(15, 10), fontsize=15).invert_yaxis()
 
 
-# In[86]:
-
-
+# Creates a graph showing the number of films the
+# top 20 ROI directors have made
 index = list(directors_roi_count['director'])
 title_count = list(directors_roi_count['title'])
 df = pd.DataFrame({'# Movies Directed': title_count},
                   index=index)
 ax = df.plot.barh(figsize=(15, 10), rot=0, fontsize=15).invert_yaxis()
 plt.xticks(np.arange(0, 4, 1))
-
-
-# In[ ]:
-
-
-
-
