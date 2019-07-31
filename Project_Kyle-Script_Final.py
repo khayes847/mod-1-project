@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[ ]:
+# In[1]:
 
 
 # Import packages
@@ -25,7 +25,7 @@ imbd_principals = pd.read_csv('Data/Zipped_Data/imdb.title.principals.csv.gz',
                               compression='gzip')
 
 
-# In[ ]:
+# In[2]:
 
 
 # Remove punctuation from producton and worldwide.
@@ -42,7 +42,7 @@ tn_budget['worldwide_gross'] = pd.to_numeric(tn_budget.worldwide_gross,
                                              errors='coerce')
 
 
-# In[ ]:
+# In[3]:
 
 
 # Create column for net profit (worldwide gross minus production budget).
@@ -67,14 +67,14 @@ tn_budget.title = tn_budget.title.str.strip()
 tn_budget.title = tn_budget.title.apply(lambda x: x.lower())
 tn_budget.title = tn_budget.title.apply(lambda x: x.translate(str.maketrans
                              ('', '', '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~')))
-tn_budget.title = tn_budget.title.replace(['the', 'and'], value='', regex=True)
+tn_budget.title = tn_budget.title.replace(['the', 'and', 'â'], value='', regex=True)
 
 # Remove month and year from date. Drop redundant columns
 tn_budget['year'] = list(tn_budget['release_date'].str[-4:])
 tn_budget = tn_budget.drop(columns=['id', 'domestic_gross', 'release_date'])
 
 
-# In[ ]:
+# In[4]:
 
 
 # Remove 'studio', 'domestic_gross', 'foreign_gross' column.
@@ -92,10 +92,10 @@ bom_gross.title = bom_gross.title.str.strip()
 bom_gross.title = bom_gross.title.apply(lambda x: x.lower())
 bom_gross.title = bom_gross.title.apply(lambda x: x.translate(str.maketrans
                              ('', '', '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~')))
-bom_gross.title = bom_gross.title.replace(['the', 'and'], value='', regex=True)
+bom_gross.title = bom_gross.title.replace(['the', 'and', 'â'], value='', regex=True)
 
 
-# In[ ]:
+# In[5]:
 
 
 # Merge tn_budget and bom_gross
@@ -105,14 +105,20 @@ merged_df = pd.merge(tn_budget, bom_gross, on=["title", "year"], how="left")
 merged_df['studio'] = merged_df.studio.fillna('Unknown')
 
 
-# In[ ]:
+# In[6]:
+
+
+imbd_basics.head()
+
+
+# In[7]:
 
 
 # Create 'year' string column from 'start_year'
 imbd_basics['year'] = imbd_basics['start_year'].astype(str)
 
 # Drop unused columns
-imbd_basics = imbd_basics.drop(columns=['original_title', 'start_year'])
+imbd_basics = imbd_basics.drop(columns=['original_title', 'start_year',])
 
 # Rename column for easier merging
 imbd_basics = imbd_basics.rename(columns={'primary_title': 'title'})
@@ -127,12 +133,12 @@ imbd_basics.title = imbd_basics.title.str.strip()
 imbd_basics.title = imbd_basics.title.apply(lambda x: x.lower())
 imbd_basics.title = imbd_basics.title.apply(lambda x: x.translate(str.maketrans
                              ('', '', '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~')))
-imbd_basics.title = imbd_basics.title.replace(['the', 'and'],
+imbd_basics.title = imbd_basics.title.replace(['the', 'and', "â"],
                                               value='',
                                               regex=True)
 
 
-# In[ ]:
+# In[8]:
 
 
 # Merge imbd_basics with merged datafile
@@ -145,7 +151,7 @@ merged_df2 = merged_df2.loc[merged_df2.year >= 2010]
 merged_df2['year'] = merged_df2['year'].astype(str)
 
 
-# In[ ]:
+# In[9]:
 
 
 # Merge imbd_principals and imbd_name
@@ -161,57 +167,45 @@ imbd_name_prin = imbd_name_prin.drop(columns=['ordering',
                                               'known_for_titles'])
 
 
-# In[ ]:
+# In[10]:
 
 
 # Create list of directors from imbd_name_prin
 directors = imbd_name_prin.loc[imbd_name_prin.category == 'director']
 
 
-# In[ ]:
+# In[11]:
 
 
 # Merge list of directors with merged document
 merged_df3 = pd.merge(merged_df2, directors, on=["tconst"], how="left")
 
 # Remove extra columns, rename primary_name to director
-merged_df3 = merged_df3.drop(columns=['category', 'runtime_minutes'])
+merged_df3 = merged_df3.drop(columns=['category', 'runtime_minutes',
+                                     'genres'])
 merged_df3 = merged_df3.rename(columns={'primary_name': 'director'})
 
 # Fill in null values for director
 merged_df3['director'] = merged_df3.director.fillna('Not listed')
 
 
-# In[ ]:
-
-
-# Create list of producers from imbd_name_prin
-producers = imbd_name_prin.loc[imbd_name_prin.category == 'producer']
-
-# Rename column primary_name to producer
-producers = producers.rename(columns={'primary_name': 'producer'})
-
-# Drop column 'category'
-producers = producers.drop(columns='category')
-
-
 # In[12]:
 
 
-# Merge list of producers with merged document
-merged_df4 = pd.merge(merged_df3, producers, on=["tconst"], how="left")
-
-# Fill null producer values
-merged_df4['producer'] = merged_df4.producer.fillna('Not listed')
-
 # Remove duplicate titles
-merged_df_cleaned = merged_df4.loc[~(merged_df4.title.duplicated())]
+merged_df_cleaned = merged_df3.loc[~(merged_df3.title.duplicated())]
 
 # Drop extra column
 merged_df_cleaned = merged_df_cleaned.drop(columns='tconst')
 
 
-# In[13]:
+# In[16]:
+
+
+merged_df_cleaned.loc[merged_df_cleaned.title == 'gods not dead']
+
+
+# In[17]:
 
 
 # Create earnings/cost graph for films with top ROI
@@ -227,7 +221,7 @@ df = pd.DataFrame({'Production Budget USD (Billion)':
 ax = df.plot.barh(figsize=(20, 10), rot=0)
 
 
-# In[14]:
+# In[18]:
 
 
 # Create earnings/cost graph for films with top ROI
@@ -242,7 +236,13 @@ df = pd.DataFrame({'Production Budget USD (Million)': production_budget,
 ax = df.plot.barh(figsize=(20, 10), rot=0)
 
 
-# In[15]:
+# In[19]:
+
+
+top_ratio
+
+
+# In[21]:
 
 
 # Create a list of 20 studios with the top ratio means
@@ -255,17 +255,11 @@ director_ratio_mean = (merged_df_cleaned.groupby
                        (['director']).ratio.mean().
                        sort_values(ascending=False)[0:20])
 
-
 # Create a list of 19 directors with the top ROI means,
 # with top value removed
 director_ratio_mean_19 = (merged_df_cleaned.groupby
                           (['director']).ratio.mean().
                           sort_values(ascending=False)[1:20])
-
-# Create a list of 20 producers with the top ROI means
-producer_ratio_mean = (merged_df_cleaned.groupby
-                       (['producer']).ratio.mean()
-                       .sort_values(ascending=False)[:20])
 
 # Provides a count for the number of films made by
 # each director with a top-20 ROI
@@ -276,14 +270,14 @@ director_roi_count = (merged_df_cleaned.groupby
                       (by='ratio', ascending=False))[0:20].reset_index()
 
 
-# In[16]:
+# In[22]:
 
 
 # Creates a graph of the 2-20 directors with the best ROI
 director_ratio_mean_19.plot(kind='barh')
 
 
-# In[17]:
+# In[23]:
 
 
 # Make a barplot - top 20 directors by ROI - Count
