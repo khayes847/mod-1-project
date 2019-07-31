@@ -16,20 +16,20 @@ get_ipython().run_line_magic('matplotlib', 'inline')
 pd.set_option('display.float_format', lambda x: '%.2f' % x)
 
 # Import data
-tn_budget = /
-pd.read_csv('Data/Zipped_Data/tn.movie_budgets.csv.gz', /
+tn_budget = \
+pd.read_csv('Data/Zipped_Data/tn.movie_budgets.csv.gz', \
             compression='gzip')
-bom_gross = /
-pd.read_csv('Data/Zipped_Data/bom.movie_gross.csv.gz', /
+bom_gross = \
+pd.read_csv('Data/Zipped_Data/bom.movie_gross.csv.gz', \
             compression='gzip')
-imbd_basics = /
-pd.read_csv('Data/Zipped_Data/imdb.title.basics.csv.gz', /
+imbd_basics = \
+pd.read_csv('Data/Zipped_Data/imdb.title.basics.csv.gz', \
             compression='gzip')
-imbd_name = /
-pd.read_csv('Data/Zipped_Data/imdb.name.basics.csv.gz', /
+imbd_name = \
+pd.read_csv('Data/Zipped_Data/imdb.name.basics.csv.gz', \
             compression='gzip')
-imbd_principals = /
-pd.read_csv('Data/Zipped_Data/imdb.title.principals.csv.gz', /
+imbd_principals = \
+pd.read_csv('Data/Zipped_Data/imdb.title.principals.csv.gz', \
             compression='gzip')
 
 
@@ -38,27 +38,27 @@ pd.read_csv('Data/Zipped_Data/imdb.title.principals.csv.gz', /
 
 # Remove punctuation from producton and worldwide.
 # Switch variables from string to float.
-tn_budget['production_budget'] = /
-tn_budget['production_budget'].apply/
-(lambda x: x.translate /
+tn_budget['production_budget'] = \
+tn_budget['production_budget'].apply\
+(lambda x: x.translate \
  (str.maketrans('', '', '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~')))
-tn_budget['worldwide_gross'] = /
-tn_budget['worldwide_gross'].apply/
-(lambda x: x.translate /
+tn_budget['worldwide_gross'] = \
+tn_budget['worldwide_gross'].apply\
+(lambda x: x.translate \
  (str.maketrans('', '', '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~')))
-tn_budget['production_budget'] = /
+tn_budget['production_budget'] = \
 pd.to_numeric(tn_budget.production_budget, downcast='float', errors='coerce')
-tn_budget['worldwide_gross'] = /
+tn_budget['worldwide_gross'] = \
 pd.to_numeric(tn_budget.worldwide_gross, downcast='float', errors='coerce')
 
 # Create column for net profit (worldwide gross minus production budget).
-tn_budget['net'] = /
-list(tn_budget.apply /
+tn_budget['net'] = \
+list(tn_budget.apply \
      (lambda x: x.worldwide_gross - x.production_budget, axis=1))
 
 # Create column for ratio (net profit divided by production budget)
-tn_budget['ratio'] = /
-list(tn_budget.apply(lambda x: x.net / x.production_budget, axis=1))
+tn_budget['ratio'] = \
+list(tn_budget.apply(lambda x: x.net \x.production_budget, axis=1))
 
 # Rename column 'movie' to 'title'
 tn_budget = tn_budget.rename(columns={'movie': 'title'})
@@ -70,9 +70,9 @@ years = ['\(2010\)', "\(2011\)",
 tn_budget.title = tn_budget.title.replace(years, value='', regex=True)
 tn_budget.title = tn_budget.title.str.strip()
 tn_budget.title = tn_budget.title.apply(lambda x: x.lower())
-tn_budget.title = /
-tn_budget.title.apply/
-(lambda x: x.translate /
+tn_budget.title = \
+tn_budget.title.apply\
+(lambda x: x.translate \
  (str.maketrans('', '', '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~')))
 tn_budget.title = tn_budget.title.replace(['the', 'and'], value='', regex=True)
 
@@ -97,8 +97,8 @@ years = ['\(2010\)', "\(2011\)",
 bom_gross.title = bom_gross.title.replace(years, value='', regex=True)
 bom_gross.title = bom_gross.title.str.strip()
 bom_gross.title = bom_gross.title.apply(lambda x: x.lower())
-bom_gross.title = bom_gross.title.apply/
-(lambda x: x.translate /
+bom_gross.title = bom_gross.title.apply\
+(lambda x: x.translate \
  (str.maketrans('', '', '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~')))
 bom_gross.title = bom_gross.title.replace(['the', 'and'], value='', regex=True)
 
@@ -130,15 +130,15 @@ imbd_basics = imbd_basics.rename(columns={'primary_title': 'title'})
 years = ['\(2010\)', "\(2011\)",
          "\(2012\)", "\(2013\)", "\(2014\)",
          "\(2015\)", "\(2016\)", "\(2017\)", "\(2018\)"]
-imbd_basics.title = imbd_basics.title.replace/
+imbd_basics.title = imbd_basics.title.replace\
 (years, value='', regex=True)
 imbd_basics.title = imbd_basics.title.str.strip()
-imbd_basics.title = imbd_basics.title.apply/
+imbd_basics.title = imbd_basics.title.apply\
 (lambda x: x.lower())
-imbd_basics.title = imbd_basics.title.apply/
-(lambda x: x.translate /
+imbd_basics.title = imbd_basics.title.apply\
+(lambda x: x.translate \
  (str.maketrans('', '', '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~')))
-imbd_basics.title = imbd_basics.title.replace/
+imbd_basics.title = imbd_basics.title.replace\
 (['the', 'and'], value='', regex=True)
 
 
@@ -146,7 +146,7 @@ imbd_basics.title = imbd_basics.title.replace/
 
 
 # Merge imbd_basics with merged datafile
-merged_df2 = pd.merge/
+merged_df2 = pd.merge\
 (merged_df, imbd_basics, on=["title", "year"], how="left")
 
 # Change year to integer, and remove all films made
@@ -160,13 +160,13 @@ merged_df2['year'] = merged_df2['year'].astype(str)
 
 
 # Merge imbd_principals and imbd_name
-imbd_name_prin = pd.merge/
+imbd_name_prin = pd.merge\
 (imbd_principals, imbd_name, on=["nconst"], how="left")
 
 # Remove extraneous columns
-imbd_name_prin = imbd_name_prin.drop/
-(columns=['ordering', 'nconst', 'job', 'characters', /
-          'birth_year', 'death_year', /
+imbd_name_prin = imbd_name_prin.drop\
+(columns=['ordering', 'nconst', 'job', 'characters', \
+          'birth_year', 'death_year', \
           'primary_profession', 'known_for_titles'])
 
 
@@ -195,11 +195,11 @@ merged_df3['director'] = merged_df3.director.fillna('Not listed')
 
 
 # Create list of producers from imbd_name_prin
-producers = imbd_name_prin.loc/
+producers = imbd_name_prin.loc\
 [imbd_name_prin.category == 'producer']
 
 # Rename column primary_name to producer
-producers = producers.rename/
+producers = producers.rename\
 (columns={'primary_name': 'producer'})
 
 # Drop column 'category'
@@ -210,19 +210,19 @@ producers = producers.drop(columns='category')
 
 
 # Merge list of producers with merged document
-merged_df4 = pd.merge/
+merged_df4 = pd.merge\
 (merged_df3, producers, on=["tconst"], how="left")
 
 # Fill null producer values
-merged_df4['producer'] = /
+merged_df4['producer'] = \
 merged_df4.producer.fillna('Not listed')
 
 # Remove duplicate titles
-merged_df_cleaned = merged_df4.loc/
+merged_df_cleaned = merged_df4.loc\
 [if merged_df4.title.duplicated() is False]
 
 # Drop extra column
-merged_df_cleaned = merged_df_cleaned.drop/
+merged_df_cleaned = merged_df_cleaned.drop\
 (columns='tconst')
 
 
@@ -230,15 +230,15 @@ merged_df_cleaned = merged_df_cleaned.drop/
 
 
 # Create a list of 20 studios with the top ratio means
-studio_ratio_mean = merged_df_cleaned.groupby(['studio'])/
+studio_ratio_mean = merged_df_cleaned.groupby(['studio'])\
 .ratio.mean().sort_values(ascending=False)[:20]
 
 # Create a list of 20 directors with the top ratio means
-director_ratio_mean = merged_df_cleaned.groupby(['director'])/
+director_ratio_mean = merged_df_cleaned.groupby(['director'])\
 .ratio.mean().sort_values(ascending=False)[:20]
 
 # Create a list of 20 producers with the top ratio means
-producer_ratio_mean = merged_df_cleaned.groupby(['producer'])/
+producer_ratio_mean = merged_df_cleaned.groupby(['producer'])\
 .ratio.mean().sort_values(ascending=False)[:20]
 
 
