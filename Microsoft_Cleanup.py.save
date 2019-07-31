@@ -1,0 +1,26 @@
+import pandas as pd
+
+def cast_to_float32(df, col_name):
+    df[col_name] = df[col_name].apply(lambda x: x.translate(str.maketrans('', '', '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~')))
+    df[col_name] = pd.to_numeric(df[col_name], downcast = 'float', errors = 'coerce')
+    pass
+
+def net_columns(df, col_name1, col_name2):
+    df['net'] = list(df.apply(lambda x: x[col_name1] - x[col_name2], axis=1))
+    pass
+
+def divide_columns(df, col_name1, col_name2):
+    df['ratio'] = list(df.apply(lambda x: x[col_name1] / x[col_name2], axis=1))
+    pass
+
+def cleanup_text(df, col_name):
+	years = ['\(2010\)', "\(2011\)",
+        	 "\(2012\)", "\(2013\)", "\(2014\)",
+         	"\(2015\)", "\(2016\)", "\(2017\)", "\(2018\)"]
+	df[col_name] = df.col_name.replace(years, value='', regex=True)
+df[col_name] = df.col_name.str.strip()
+df[col_name] = df.col_name.apply(lambda x: x.lower())
+df[col_name] = df.col_name.\
+apply(lambda x: x.translate(str.maketrans
+                             ('', '', '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~')))
+df[col_name] = df.col_name.replace(['the', 'and'], value='', regex=True)
