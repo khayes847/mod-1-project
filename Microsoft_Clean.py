@@ -113,11 +113,15 @@ def Clean_Data(df1, df2, df3, df4, df5):
 	fill_na(merged_df4, 'producer')
 	
 	# Remove duplicate titles:
-	remove_duplicates(merged_df4, 'title')
+	md_clean = remove_duplicates(merged_df4, 'title')
 	
 	# Finally, drop the extra column:
-	drop_cols(merged_df4, 'tconst')
+	drop_cols(md_clean, 'tconst')
 	
-	# And rename:
-	md_clean = merged_df4
+	# ... And reformat title names:
+	replace_cell(merged_df4, 'title', 'beauty   beast', 'beauty and the beast')
+	replace_cell(merged_df4, 'title', 'black panr', 'black panther')
+	replace_cell(merged_df4, 'title', 'harry potter   deathly hallows part ii', 'harry potter deathly hallows part ii')
+	replace_cell(merged_df4, 'title', 'star wars ep vii  force awakens', 'star wars ep vii force awakens')
+	
 	return md_clean

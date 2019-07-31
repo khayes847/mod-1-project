@@ -30,16 +30,12 @@ def rename_col(df, col_name, new_name):
     pass
 
 def cleanup_text(df, col_name):
-    years = ['\(2010\)', "\(2011\)",
-             "\(2012\)", "\(2013\)", "\(2014\)",
-             "\(2015\)", "\(2016\)", "\(2017\)", "\(2018\)"]
+    years = ['\(2010\)', "\(2011\)", "\(2012\)", "\(2013\)", "\(2014\)", "\(2015\)", "\(2016\)", "\(2017\)", "\(2018\)"]
     df[col_name] = df[col_name].replace(years, value='', regex=True)
     df[col_name] = df[col_name].str.strip()
     df[col_name] = df[col_name].apply(lambda x: x.lower())
-    df[col_name] = df[col_name].\
-    apply(lambda x: x.translate(str.maketrans
-                                 ('', '', '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~')))
-    df[col_name] = df[col_name].replace(['the', 'and'], value='', regex=True)
+    df[col_name] = df[col_name].apply(lambda x: x.translate(str.maketrans('', '', '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~')))
+    df[col_name] = df[col_name].replace(['the', 'and', "â", '\x80\x99'], value='', regex=True)
     pass
 
 def convert_year(df, col_name):
@@ -62,8 +58,8 @@ def subset_series(df, col_name, criteria):
     return subset
 
 def remove_duplicates(df, col_name):
-    df.loc[~(df[col_name].duplicated())]
-    pass
+    foo = df.loc[~(df[col_name].duplicated())]
+    return foo
 
 def left_merge(df1, df2, *args):
     foo = []
@@ -71,3 +67,7 @@ def left_merge(df1, df2, *args):
         foo.append(i)
     new = pd.merge(df1, df2, on=foo, how='left')
     return new
+
+def replace_cell(df1, col_name, cell_name, new_name):
+    df1[col_name] = df1[col_name].replace([cell_name], value=new_name, regex=True)
+    pass
