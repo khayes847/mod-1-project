@@ -6,11 +6,8 @@
 
 # Import packages
 import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
-import string
 import seaborn as sns
-get_ipython().run_line_magic('matplotlib', 'inline')
 
 # Turn off scientific notation in Pandas
 pd.set_option('display.float_format', lambda x: '%.2f' % x)
@@ -33,14 +30,15 @@ imbd_principals = pd.read_csv('Data/Zipped_Data/imdb.title.principals.csv.gz',
 
 # Remove punctuation from producton and worldwide.
 # Switch variables from string to float.
-tn_budget['production_budget'] = tn_budget['production_budget'].
-\apply(lambda x: x.translate(str.maketrans
+tn_budget['production_budget'] = tn_budget['production_budget'].\
+ apply(lambda x: x.translate(str.maketrans
                              ('', '', '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~')))
-tn_budget['worldwide_gross'] = tn_budget['worldwide_gross'].
-\apply(lambda x: x.translate(str.maketrans
+tn_budget['worldwide_gross'] = tn_budget['worldwide_gross'].\
+ apply(lambda x: x.translate(str.maketrans
                              ('', '', '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~')))
 tn_budget['production_budget'] = pd.to_numeric(tn_budget.production_budget,
-                                               downcast='float', errors='coerce')
+                                               downcast='float',
+                                               errors='coerce')
 tn_budget['worldwide_gross'] = pd.to_numeric(tn_budget.worldwide_gross,
                                              downcast='float',
                                              errors='coerce')
@@ -63,14 +61,14 @@ tn_budget['ratio'] = list(tn_budget.apply
 tn_budget = tn_budget.rename(columns={'movie': 'title'})
 
 # Remove whitespace, potential extra words, punctuation, and case from titles
-years = ['\(2010\)', "\(2011\)",
-         "\(2012\)", "\(2013\)", "\(2014\)",
-         "\(2015\)", "\(2016\)", "\(2017\)", "\(2018\)"]
+years = [r'\(2010\)', r"\(2011\)",
+         r"\(2012\)", r"\(2013\)", r"\(2014\)",
+         r"\(2015\)", r"\(2016\)", r"\(2017\)", r"\(2018\)"]
 tn_budget.title = tn_budget.title.replace(years, value='', regex=True)
 tn_budget.title = tn_budget.title.str.strip()
 tn_budget.title = tn_budget.title.apply(lambda x: x.lower())
-tn_budget.title = tn_budget.title.
-\apply(lambda x: x.translate(str.maketrans
+tn_budget.title = tn_budget.title.\
+ apply(lambda x: x.translate(str.maketrans
                              ('', '', '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~')))
 tn_budget.title = tn_budget.title.replace(['the', 'and'], value='', regex=True)
 
@@ -89,14 +87,14 @@ bom_gross['year'] = bom_gross['year'].astype(str)
 
 # Remove years and right whitespace from titles.
 # Remove potentially extraneous words.
-years = ['\(2010\)', "\(2011\)",
-         "\(2012\)", "\(2013\)", "\(2014\)",
-         "\(2015\)", "\(2016\)", "\(2017\)", "\(2018\)"]
+years = [r'\(2010\)', r"\(2011\)",
+         r"\(2012\)", r"\(2013\)", r"\(2014\)",
+         r"\(2015\)", r"\(2016\)", r"\(2017\)", r"\(2018\)"]
 bom_gross.title = bom_gross.title.replace(years, value='', regex=True)
 bom_gross.title = bom_gross.title.str.strip()
 bom_gross.title = bom_gross.title.apply(lambda x: x.lower())
-bom_gross.title = bom_gross.title.
-\apply(lambda x: x.translate(str.maketrans
+bom_gross.title = bom_gross.title.\
+ apply(lambda x: x.translate(str.maketrans
                              ('', '', '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~')))
 bom_gross.title = bom_gross.title.replace(['the', 'and'], value='', regex=True)
 
@@ -125,14 +123,14 @@ imbd_basics = imbd_basics.rename(columns={'primary_title': 'title'})
 
 # Remove years and right whitespace from titles.
 # Remove potentially extraneous words.
-years = ['\(2010\)', "\(2011\)",
-         "\(2012\)", "\(2013\)", "\(2014\)",
-         "\(2015\)", "\(2016\)", "\(2017\)", "\(2018\)"]
+years = [r'\(2010\)', r"\(2011\)",
+         r"\(2012\)", r"\(2013\)", r"\(2014\)",
+         r"\(2015\)", r"\(2016\)", r"\(2017\)", r"\(2018\)"]
 imbd_basics.title = imbd_basics.title.replace(years, value='', regex=True)
 imbd_basics.title = imbd_basics.title.str.strip()
 imbd_basics.title = imbd_basics.title.apply(lambda x: x.lower())
-imbd_basics.title = imbd_basics.title.
-\apply(lambda x: x.translate(str.maketrans
+imbd_basics.title = imbd_basics.title.\
+ apply(lambda x: x.translate(str.maketrans
                              ('', '', '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~')))
 imbd_basics.title = imbd_basics.title.replace(['the', 'and'],
                                               value='',
@@ -276,7 +274,7 @@ producer_ratio_mean = (merged_df_cleaned.groupby
 
 # Provides a count for the number of films made by
 # each director with a top-20 ROI
-director_ROI_count = (merged_df_cleaned.groupby
+director_roi_count = (merged_df_cleaned.groupby
                       ('director')['ratio', 'title'].agg
                       ({'ratio': 'mean', 'title': 'nunique'})
                       .sort_values
@@ -294,15 +292,15 @@ director_ratio_mean_19.plot(kind='barh')
 
 
 # Make a barplot - top 20 directors by ROI - Count
-top_20_directors_ROI_count = (merged_df_cleaned.groupby
+top_20_directors_roi_count = (merged_df_cleaned.groupby
                               ('director')['ratio', 'title']
                               .agg({'ratio':
                                     'mean', 'title': 'nunique'})
                               .sort_values
                               (by='ratio',
                                ascending=False))[0:20].reset_index()
-ax = sns.barplot(x=top_20_directors_ROI_count['title'],
-                 y=top_20_directors_ROI_count['director'])
+ax = sns.barplot(x=top_20_directors_roi_count['title'],
+                 y=top_20_directors_roi_count['director'])
 ax.set_xticklabels(ax.get_xticklabels(), rotation=45, ha="right")
 plt.rcParams["figure.figsize"] = (20, 10)
 plt.rcParams["xtick.labelsize"] = 20
