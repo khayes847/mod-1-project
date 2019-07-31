@@ -58,7 +58,8 @@ tn_budget['ratio'] = list(tn_budget.apply
 # Rename column 'movie' to 'title'
 tn_budget = tn_budget.rename(columns={'movie': 'title'})
 
-# Remove whitespace, potential extra words, punctuation, and case from titles
+# Remove whitespace, potential extra words, punctuation, 
+# corrupted text, and case from titles
 years = [r'\(2010\)', r"\(2011\)",
          r"\(2012\)", r"\(2013\)", r"\(2014\)",
          r"\(2015\)", r"\(2016\)", r"\(2017\)", r"\(2018\)"]
@@ -83,8 +84,8 @@ tn_budget = tn_budget.drop(columns=['id', 'domestic_gross', 'release_date'])
 bom_gross = bom_gross.drop(columns=['domestic_gross', 'foreign_gross'])
 bom_gross['year'] = bom_gross['year'].astype(str)
 
-# Remove years and right whitespace from titles.
-# Remove potentially extraneous words.
+# Remove whitespace, potential extra words, punctuation, 
+# corrupted text, and case from titles
 years = [r'\(2010\)', r"\(2011\)",
          r"\(2012\)", r"\(2013\)", r"\(2014\)",
          r"\(2015\)", r"\(2016\)", r"\(2017\)", r"\(2018\)"]
@@ -120,8 +121,8 @@ imbd_basics = imbd_basics.drop(columns=['original_title', 'start_year'])
 # Rename column for easier merging
 imbd_basics = imbd_basics.rename(columns={'primary_title': 'title'})
 
-# Remove years and right whitespace from titles.
-# Remove potentially extraneous words.
+# Remove whitespace, potential extra words, punctuation, 
+# corrupted text, and case from titles
 years = [r'\(2010\)', r"\(2011\)",
          r"\(2012\)", r"\(2013\)", r"\(2014\)",
          r"\(2015\)", r"\(2016\)", r"\(2017\)", r"\(2018\)"]
