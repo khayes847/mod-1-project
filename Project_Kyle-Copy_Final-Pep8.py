@@ -232,7 +232,13 @@ directors_roi_count = (merged_df_cleaned.groupby
                        (by='ratio', ascending=False))[0:20].reset_index()
 
 
-# In[100]:
+# In[102]:
+
+
+top_net.title
+
+
+# In[103]:
 
 
 # Clean titles
@@ -242,9 +248,11 @@ top_net.title = top_net.title.replace(['black panr'],
                                       value='black panther', regex=True)
 top_net.title = top_net.title .replace(['harry potter   deathly hallows part ii'],
           value='harry potter deathly hallows part ii', regex=True)
+top_net.title = top_net.title .replace(['star wars ep vii  force awakens'],
+          value='star wars ep vii force awakens', regex=True)
 
 
-# In[101]:
+# In[104]:
 
 
 # Create earnings/cost graph for films with top net
