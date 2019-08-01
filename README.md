@@ -15,8 +15,8 @@
 
 ## Responsibilities:
 
- - Kyle: most of the codebase, data wrangling, analysis 
- - George: project admin, copy editing, storytelling
+ - Kyle: most of the data wrangling, analysis, presentation 
+ - George: project admin, copy editing, visualization, code abstraction
 
 ## Summary of Files in Repository:
 
@@ -27,6 +27,6 @@ Root: Mod-1-Project/
  - Deliverables.md -- Original README.md from learn-co-students/
  - .git
  - .gitignore
- - Project.ipynb -- Our Jupyter Notebook
+ - Project_Kyle.ipynb -- Jupyter Notebook
  - README.md -- this file!
  - TBC: SOMETHING.py -- a Python 3 file for our functions and modules
