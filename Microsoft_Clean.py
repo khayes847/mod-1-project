@@ -65,7 +65,7 @@ def Clean_Data(df1, df2, df3, df4, df5):
 	cast_to_int(merged_df2, 'year')
 	
 	# Throw out all films made before 2010:
-	cutoff_series_at(merged_df2, 'year', 2010)
+	merged_df2 = cutoff_series_at(merged_df2, 'year', 2010)
 	
 	# Now cast year back to string:
 	cast_to_str(merged_df2, 'year')
@@ -119,9 +119,9 @@ def Clean_Data(df1, df2, df3, df4, df5):
 	drop_cols(md_clean, 'tconst')
 	
 	# ... And reformat title names:
-	replace_cell(merged_df4, 'title', 'beauty   beast', 'beauty and the beast')
-	replace_cell(merged_df4, 'title', 'black panr', 'black panther')
-	replace_cell(merged_df4, 'title', 'harry potter   deathly hallows part ii', 'harry potter deathly hallows part ii')
-	replace_cell(merged_df4, 'title', 'star wars ep vii  force awakens', 'star wars ep vii force awakens')
+	replace_cell(md_clean, 'title', 'beauty   beast', 'beauty and the beast')
+	replace_cell(md_clean, 'title', 'black panr', 'black panther')
+	replace_cell(md_clean, 'title', 'harry potter   deathly hallows part ii', 'harry potter deathly hallows part ii')
+	replace_cell(md_clean, 'title', 'star wars ep vii  force awakens', 'star wars ep vii force awakens')
 	
 	return md_clean

@@ -71,3 +71,4 @@ def left_merge(df1, df2, *args):
 def replace_cell(df1, col_name, cell_name, new_name):
     df1[col_name] = df1[col_name].replace([cell_name], value=new_name, regex=True)
     pass
+
